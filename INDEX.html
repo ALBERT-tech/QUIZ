@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Диагностика риска пролапса гениталий</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-group label,
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .radio-group input[type="radio"],
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-section {
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .risk-low {
+            background: #4caf50;
+        }
+
+        .risk-medium {
+            background: #ff9800;
+        }
+
+        .risk-high {
+            background: #f44336;
+        }
+
+        .result-score {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .result-text {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+
+        .anonymous-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+            margin-top: 20px;
+        }
+
+        .anonymous-section h3 {
+            color: #ff9800;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .anonymous-section p {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .section-title {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 20px 0 15px 0;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .question-number {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .imt-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .imt-inputs input {
+            width: 100%;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .id-section {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #bbdefb;
+        }
+
+        .id-section label {
+            color: #1976d2;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+
+            .imt-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ID Section -->
+        <div id="idSection" class="form-section active">
+            <div class="header">
+                <h1>Диагностика риска пролапса гениталий</h1>
+                <p>Анонимное тестирование</p>
+            </div>
+
+            <div class="id-section">
+                <div class="form-group">
+                    <label for="patientId">Введите идентификационный номер пациента:</label>
+                    <input type="text" id="patientId" placeholder="Например: PAT-001" required>
+                    <div class="error-message" id="idError">Пожалуйста, введите идентификационный номер</div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn-primary" onclick="startQuiz()">Начать тестирование</button>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quizSection" class="form-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div id="sectionTitle" class="section-title"></div>
+            <div id="questionNumber" class="question-number"></div>
+
+            <form id="quizForm"></form>
+
+            <div class="buttons">
+                <button class="btn-secondary" id="prevBtn" onclick="previousQuestion()" disabled>← Назад</button>
+                <button class="btn-primary" id="nextBtn" onclick="nextQuestion()">Далее →</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="form-section">
+            <div class="header">
+                <h1>Результаты тестирования</h1>
+            </div>
+
+            <div class="result-section">
+                <p style="color: #666; margin-bottom: 10px;">Идентификационный номер: <strong id="resultId"></strong></p>
+                
+                <div id="riskBadge" class="result-badge"></div>
+                
+                <div class="result-score" id="resultScore"></div>
+                
+                <div class="result-text" id="resultRecommendation"></div>
+
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                    <button class="btn-primary" onclick="resetQuiz()">Новое тестирование</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let quizData = null;
+        let currentQuestion = 0;
+        let answers = {};
+        let currentPatientId = '';
+
+        // Load quiz data
+        async function loadQuizData() {
+            try {
+                const response = await fetch('quiz_data.json');
+                quizData = await response.json();
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                alert('Ошибка загрузки данных тестирования');
+            }
+        }
+
+        function startQuiz() {
+            const patientId = document.getElementById('patientId').value.trim();
+            const idError = document.getElementById('idError');
+
+            if (!patientId) {
+                idError.classList.add('show');
+                return;
+            }
+
+            idError.classList.remove('show');
+            currentPatientId = patientId;
+            answers = {};
+            currentQuestion = 0;
+
+            document.getElementById('idSection').classList.remove('active');
+            document.getElementById('quizSection').classList.add('active');
+
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            if (!quizData) return;
+
+            const question = quizData.questions[currentQuestion];
+            const form = document.getElementById('quizForm');
+            form.innerHTML = '';
+
+            // Update progress
+            const progress = ((currentQuestion + 1) / quizData.questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // Update section title
+            document.getElementById('sectionTitle').textContent = question.category;
+            document.getElementById('questionNumber').textContent = `Вопрос ${currentQuestion + 1} из ${quizData.questions.length}`;
+
+            // Render question based on type
+            if (question.type === 'numeric') {
+                renderNumericQuestion(question, form);
+            } else if (question.type === 'select') {
+                renderSelectQuestion(question, form);
+            } else if (question.type === 'multi_select') {
+                renderMultiSelectQuestion(question, form);
+            } else if (question.type === 'composite') {
+                renderCompositeQuestion(question, form);
+            }
+
+            // Update buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = currentQuestion === quizData.questions.length - 1 ? 'Завершить' : 'Далее →';
+
+            // Anonymous section notice
+            if (question.isAnonymous) {
+                form.innerHTML += '<div class="anonymous-section"><h3>⚠️ Анонимный раздел</h3><p>Ваши ответы на эти вопросы не будут сохранены в виде обычных данных и остаются полностью конфиденциальными.</p></div>';
+            }
+        }
+
+        function renderNumericQuestion(question, form) {
+            const group = document.createElement('div');
+            group.className = 'form-group';
+            group.innerHTML = `
+                <label>${question.question}</label>
+                <input type="number" id="q${question.id}" placeholder="Введите число" min="0">
+                <div class="error-message" id="error${question.id}"></div>
+            `;
+            form.appendChild(group);
+
+            const input = form.querySelector(`#q${question.id}`);
+            if (answers[question.id] !== undefined) {
+                input.value = answers[question.id];
+            }
+        }
+
+        function renderSelectQuestion(question, form) {
+            const group = document.createElement('div');
+            group.className = 'form-group';
+            group.innerHTML = `<label>${question.question}</label>`;
+
+            const radioGroup = document.createElement('div');
+            radioGroup.className = 'radio-group';
+
+            question.options.forEach((option, index) => {
+                const label = document.createElement('label');
+                label.innerHTML = `
+                    <input type="radio" name="q${question.id}" value="${index}" ${answers[question.id] === index ? 'checked' : ''}>
+                    ${option.label}
+                `;
+                radioGroup.appendChild(label);
+            });
+
+            group.appendChild(radioGroup);
+            form.appendChild(group);
+        }
+
+        function renderMultiSelectQuestion(question, form) {
+            const group = document.createElement('div');
+            group.className = 'form-group';
+            group.innerHTML = `<label>${question.question}</label>`;
+
+            const checkboxGroup = document.createElement('div');
+            checkboxGroup.className = 'checkbox-group';
+
+            question.options.forEach((option, index) => {
+                const label = document.createElement('label');
+                const isChecked = answers[question.id] && answers[question.id].includes(index);
+                label.innerHTML = `
+                    <input type="checkbox" data-question="${question.id}" data-index="${index}" ${isChecked ? 'checked' : ''}>
+                    ${option.label}
+                `;
+                checkboxGroup.appendChild(label);
+            });
+
+            group.appendChild(checkboxGroup);
+            form.appendChild(group);
+        }
+
+        function renderCompositeQuestion(question, form) {
+            const group = document.createElement('div');
+            group.className = 'form-group';
+            group.innerHTML = `<label>${question.question}</label>`;
+
+            const imtInputs = document.createElement('div');
+            imtInputs.className = 'imt-inputs';
+
+            const currentAnswer = answers[question.id] || {};
+
+            question.subfields.forEach(field => {
+                const input = document.createElement('input');
+                input.type = field.type;
+                input.placeholder = field.label;
+                input.id = `q${question.id}_${field.name}`;
+                input.value = currentAnswer[field.name] || '';
+                imtInputs.appendChild(input);
+            });
+
+            group.appendChild(imtInputs);
+            form.appendChild(group);
+        }
+
+        function nextQuestion() {
+            if (!validateQuestion(currentQuestion)) {
+                return;
+            }
+
+            saveAnswer();
+
+            if (currentQuestion < quizData.questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                saveAnswer();
+                currentQuestion--;
+                displayQuestion();
+            }
+        }
+
+        function saveAnswer() {
+            const question = quizData.questions[currentQuestion];
+            const form = document.getElementById('quizForm');
+
+            if (question.type === 'numeric') {
+                const input = form.querySelector(`#q${question.id}`);
+                answers[question.id] = input ? parseInt(input.value) : null;
+            } else if (question.type === 'select') {
+                const selected = form.querySelector(`input[name="q${question.id}"]:checked`);
+                answers[question.id] = selected ? parseInt(selected.value) : null;
+            } else if (question.type === 'multi_select') {
+                const checked = form.querySelectorAll(`input[data-question="${question.id}"]:checked`);
+                answers[question.id] = Array.from(checked).map(cb => parseInt(cb.dataset.index));
+            } else if (question.type === 'composite') {
+                const obj = {};
+                question.subfields.forEach(field => {
+                    const input = form.querySelector(`#q${question.id}_${field.name}`);
+                    obj[field.name] = input ? input.value : '';
+                });
+                answers[question.id] = obj;
+            }
+        }
+
+        function validateQuestion(index) {
+            const question = quizData.questions[index];
+            if (!question.required) return true;
+
+            const form = document.getElementById('quizForm');
+            const errorElement = form.querySelector(`#error${question.id}`);
+
+            if (question.type === 'numeric') {
+                const input = form.querySelector(`#q${question.id}`);
+                if (!input || input.value === '') {
+                    if (errorElement) {
+                        errorElement.textContent = 'Это поле обязательно';
+                        errorElement.classList.add('show');
+                    }
+                    return false;
+                }
+                if (errorElement) errorElement.classList.remove('show');
+            } else if (question.type === 'select') {
+                const selected = form.querySelector(`input[name="q${question.id}"]:checked`);
+                if (!selected) {
+                    if (errorElement) {
+                        errorElement.textContent = 'Выберите вариант';
+                        errorElement.classList.add('show');
+                    }
+                    return false;
+                }
+                if (errorElement) errorElement.classList.remove('show');
+            }
+
+            return true;
+        }
+
+        function calculateScore() {
+            let totalScore = 0;
+
+            quizData.questions.forEach((question, index) => {
+                const answer = answers[question.id];
+                if (answer === null || answer === undefined) return;
+
+                if (question.type === 'numeric') {
+                    const score = question.scoring.find(s => {
+                        const min = s.condition.min ?? -Infinity;
+                        const max = s.condition.max ?? Infinity;
+                        return answer >= min && answer <= max;
+                    });
+                    if (score) totalScore += score.points;
+                } else if (question.type === 'select') {
+                    if (answer !== null && question.options[answer]) {
+                        totalScore += question.options[answer].points;
+                    }
+                } else if (question.type === 'multi_select') {
+                    if (Array.isArray(answer)) {
+                        answer.forEach(optIndex => {
+                            if (question.options[optIndex]) {
+                                totalScore += question.options[optIndex].points;
+                            }
+                        });
+                    }
+                } else if (question.type === 'composite') {
+                    if (question.id === 7 && answer.height && answer.weight) {
+                        const height = parseInt(answer.height);
+                        const weight = parseInt(answer.weight);
+                        if (height > 0 && weight > 0) {
+                            const imt = weight / ((height / 100) ** 2);
+                            const score = question.scoring.find(s => {
+                                const min = s.condition.bmi?.min ?? -Infinity;
+                                const max = s.condition.bmi?.max ?? Infinity;
+                                return imt >= min && imt <= max;
+                            });
+                            if (score) totalScore += score.points;
+                        }
+                    }
+                }
+            });
+
+            return totalScore;
+        }
+
+        function getRiskLevel(score) {
+            const riskLevels = quizData.riskLevels;
+            for (const [key, level] of Object.entries(riskLevels)) {
+                const [min, max] = level.range;
+                if (score >= min && score <= max) {
+                    return { key, ...level };
+                }
+            }
+            return riskLevels.low;
+        }
+
+        function showResults() {
+            const score = calculateScore();
+            const riskLevel = getRiskLevel(score);
+
+            document.getElementById('resultId').textContent = currentPatientId;
+            document.getElementById('resultScore').textContent = `${score} баллов`;
+            document.getElementById('riskBadge').textContent = riskLevel.name;
+            document.getElementById('riskBadge').className = `result-badge risk-${riskLevel.key}`;
+            document.getElementById('resultRecommendation').textContent = riskLevel.recommendation;
+
+            document.getElementById('quizSection').classList.remove('active');
+            document.getElementById('resultsSection').classList.add('active');
+        }
+
+        function resetQuiz() {
+            document.getElementById('idSection').classList.add('active');
+            document.getElementById('resultsSection').classList.remove('active');
+            document.getElementById('patientId').value = '';
+            answers = {};
+            currentQuestion = 0;
+        }
+
+        // Initialize
+        loadQuizData();
+    </script>
+</body>
+</html>

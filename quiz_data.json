@@ -1,0 +1,456 @@
+{
+  "riskLevels": {
+    "low": {
+      "range": [1, 20],
+      "name": "Низкий риск",
+      "recommendation": "Низкая степень риска формирования пролапса гениталий. Рекомендуется регулярное наблюдение и профилактические меры."
+    },
+    "medium": {
+      "range": [21, 35],
+      "name": "Средний риск",
+      "recommendation": "Средняя степень риска формирования пролапса гениталий. Рекомендуется консультация специалиста и выполнение профилактических мероприятий."
+    },
+    "high": {
+      "range": [40, 60],
+      "name": "Высокий риск",
+      "recommendation": "Высокая степень риска формирования пролапса гениталий. Необходима консультация гинеколога и возможное лечение."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "category": "Неуправляемые факторы риска",
+      "type": "numeric",
+      "question": "Возраст (лет)",
+      "required": true,
+      "scoring": [
+        {"condition": {"min": 0, "max": 19}, "points": 2, "label": "Подростковый до 19"},
+        {"condition": {"min": 20, "max": 45}, "points": 1, "label": "Репродуктивный от 20 до 45 лет"},
+        {"condition": {"min": 46, "max": 50}, "points": 2, "label": "Перименопаузальный 46-50"},
+        {"condition": {"min": 51, "max": 150}, "points": 3, "label": "Постменопаузальный старше 51"}
+      ]
+    },
+    {
+      "id": 2,
+      "category": "Неуправляемые факторы риска",
+      "type": "numeric",
+      "question": "Возраст начала месячных (лет)",
+      "required": true,
+      "scoring": [
+        {"condition": {"max": 12}, "points": 1, "label": "≤ 12"},
+        {"condition": {"min": 13, "max": 15}, "points": 0, "label": "13-15"},
+        {"condition": {"min": 16}, "points": 2, "label": "≥ 16"}
+      ]
+    },
+    {
+      "id": 3,
+      "category": "Неуправляемые факторы риска",
+      "type": "numeric",
+      "question": "Возраст завершения месячных (лет)",
+      "required": true,
+      "scoring": [
+        {"condition": {"max": 40}, "points": 2, "label": "≤ 40"},
+        {"condition": {"min": 41, "max": 45}, "points": 0, "label": "41-45"},
+        {"condition": {"min": 46, "max": 50}, "points": 1, "label": "46-50"},
+        {"condition": {"min": 51}, "points": 3, "label": "≥ 51"}
+      ]
+    },
+    {
+      "id": 4,
+      "category": "Неуправляемые факторы риска",
+      "type": "multi_select",
+      "question": "Семейный анамнез. Укажите у кого из родственников было опущение и выпадение половых органов и грыжи",
+      "required": false,
+      "options": [
+        {"label": "Нет опущения", "points": 0, "value": "none"},
+        {"label": "Пролапс у матери", "points": 2, "value": "mother"},
+        {"label": "Пролапс у других родственников", "points": 1, "value": "other"}
+      ]
+    },
+    {
+      "id": 5,
+      "category": "Управляемые факторы риска",
+      "type": "select",
+      "question": "Количество родов",
+      "required": true,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "1", "points": 1},
+        {"label": "2", "points": 2},
+        {"label": "≥ 3", "points": 3}
+      ]
+    },
+    {
+      "id": 6,
+      "category": "Управляемые факторы риска",
+      "type": "numeric",
+      "question": "Возраст первых родов (лет)",
+      "required": false,
+      "scoring": [
+        {"condition": {"max": 20}, "points": 1, "label": "≤ 20"},
+        {"condition": {"min": 21, "max": 25}, "points": 0, "label": "21-25"},
+        {"condition": {"min": 26, "max": 29}, "points": 1, "label": "26-29"},
+        {"condition": {"min": 30}, "points": 2, "label": "≥ 30"}
+      ]
+    },
+    {
+      "id": 7,
+      "category": "Управляемые факторы риска",
+      "type": "composite",
+      "question": "Масса тела (рост и вес для расчета ИМТ)",
+      "required": true,
+      "subfields": [
+        {"name": "height", "label": "Рост (см)", "type": "numeric"},
+        {"name": "weight", "label": "Вес (кг)", "type": "numeric"}
+      ],
+      "scoring": [
+        {"condition": {"bmi": {"max": 19}}, "points": 1, "label": "Пониженное питание (<19.0)"},
+        {"condition": {"bmi": {"min": 20, "max": 25.9}}, "points": 0, "label": "Нормальная масса тела (20.5-25.9)"},
+        {"condition": {"bmi": {"min": 26}}, "points": 2, "label": "Ожирение (>26)"}
+      ]
+    },
+    {
+      "id": 8,
+      "category": "Управляемые факторы риска",
+      "type": "select",
+      "question": "Употребление алкоголя",
+      "required": true,
+      "options": [
+        {"label": "Не потребляет", "points": 0},
+        {"label": "Экспотребитель", "points": 1},
+        {"label": "Употребляет в настоящее время", "points": 2}
+      ]
+    },
+    {
+      "id": 9,
+      "category": "Управляемые факторы риска",
+      "type": "select",
+      "question": "Табакокурение",
+      "required": true,
+      "options": [
+        {"label": "Не курит", "points": 0},
+        {"label": "Экспотребитель", "points": 1},
+        {"label": "Курит в настоящее время", "points": 2}
+      ]
+    },
+    {
+      "id": 10,
+      "category": "Управляемые факторы риска",
+      "type": "select",
+      "question": "Образ жизни",
+      "required": true,
+      "options": [
+        {"label": "Активный", "points": 0},
+        {"label": "Малоподвижный", "points": 1},
+        {"label": "Тяжелый труд", "points": 2}
+      ]
+    },
+    {
+      "id": 11,
+      "category": "Условно управляемые факторы риска",
+      "type": "numeric",
+      "question": "Наибольшая масса плода (гр)",
+      "required": false,
+      "scoring": [
+        {"condition": {"max": 3000}, "points": 1, "label": "< 3000"},
+        {"condition": {"min": 3000, "max": 3500}, "points": 2, "label": "3000-3500"},
+        {"condition": {"min": 3500}, "points": 3, "label": "> 3500"}
+      ]
+    },
+    {
+      "id": 12,
+      "category": "Условно управляемые факторы риска",
+      "type": "select",
+      "question": "Были ли у вас травмы промежности и органов малого таза в родах",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (разрывы)", "points": 1},
+        {"label": "Разрыв промежности IV ст.", "points": 2}
+      ]
+    },
+    {
+      "id": 13,
+      "category": "Условно управляемые факторы риска",
+      "type": "select",
+      "question": "Были ли у вас операции на промежности в родах",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (эпизиотомия, перинеотомия)", "points": 1},
+        {"label": "Наложение щипцов", "points": 2}
+      ]
+    },
+    {
+      "id": 14,
+      "category": "Условно управляемые факторы риска",
+      "type": "select",
+      "question": "Были ли у вас расстройства функции тазовых органов в послеродовом периоде",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (задержка мочи, геморрой, недержание)", "points": 1}
+      ]
+    },
+    {
+      "id": 15,
+      "category": "Условно управляемые факторы риска",
+      "type": "select",
+      "question": "Какие заболевания и осложнения были в период беременности, родов и послеродовом периоде",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (преэклампсия, анемия, диабет и т.д.)", "points": 1}
+      ]
+    },
+    {
+      "id": 16,
+      "category": "Условно управляемые факторы риска",
+      "type": "select",
+      "question": "Преждевременные роды",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
+      ]
+    },
+    {
+      "id": 17,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Воспалительные заболевания половых органов",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
+      ]
+    },
+    {
+      "id": 18,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Доброкачественные заболевания половых органов",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
+      ]
+    },
+    {
+      "id": 19,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Были ли операции по поводу гинекологических заболеваний",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
+      ]
+    },
+    {
+      "id": 20,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Были ли травмы наружных половых и тазовых органов",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
+      ]
+    },
+    {
+      "id": 21,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Были ли операции на наружных половых и тазовых органах",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
+      ]
+    },
+    {
+      "id": 22,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Заболевания эндокринной системы",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (гипофункция щитовидной железы, диабет, ожирение)", "points": 1}
+      ]
+    },
+    {
+      "id": 23,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Заболевания органов дыхания",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (бронхит, пневмония, астма)", "points": 1}
+      ]
+    },
+    {
+      "id": 24,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Заболевания сердечно-сосудистой системы",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (гипертония, атеросклероз, инфаркт)", "points": 1}
+      ]
+    },
+    {
+      "id": 25,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Заболевания желудочно-кишечного тракта",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (гастрит, запоры, геморрой)", "points": 1}
+      ]
+    },
+    {
+      "id": 26,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Заболевания мочевыделительной системы",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (пиелонефрит, цистит, недержание)", "points": 1}
+      ]
+    },
+    {
+      "id": 27,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Заболевания органов зрения",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (катаракта, глаукома, близорукость)", "points": 1}
+      ]
+    },
+    {
+      "id": 28,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Заболевания нервной системы",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (опухоли, эпилепсия, остеохондроз, инсульт)", "points": 1}
+      ]
+    },
+    {
+      "id": 29,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Заболевания системы крови",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (хроническая анемия)", "points": 1}
+      ]
+    },
+    {
+      "id": 30,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Патология костно-мышечной и опорно-двигательной системы",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (артрит, артроз, сколиоз)", "points": 1}
+      ]
+    },
+    {
+      "id": 31,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Патология зубочелюстной системы",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (кариес, нарушения прикуса)", "points": 1},
+        {"label": "Адентия (полное отсутствие зубов)", "points": 3}
+      ]
+    },
+    {
+      "id": 32,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Перенесенные полостные операции",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (аппендэктомия, холецистэктомия)", "points": 1}
+      ]
+    },
+    {
+      "id": 33,
+      "category": "Заболевания",
+      "type": "select",
+      "question": "Другие не полостные операции",
+      "required": false,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да (по геморрою, варикозу, тонзиллэктомия)", "points": 1}
+      ]
+    },
+    {
+      "id": 34,
+      "category": "Расстройства функции тазовых органов (анонимно)",
+      "type": "select",
+      "question": "Расстройства мочеиспускания",
+      "required": false,
+      "isAnonymous": true,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
+      ]
+    },
+    {
+      "id": 35,
+      "category": "Расстройства функции тазовых органов (анонимно)",
+      "type": "select",
+      "question": "Расстройства дефекации",
+      "required": false,
+      "isAnonymous": true,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
+      ]
+    },
+    {
+      "id": 36,
+      "category": "Расстройства функции тазовых органов (анонимно)",
+      "type": "select",
+      "question": "Расстройства половой функции",
+      "required": false,
+      "isAnonymous": true,
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
+      ]
+    },
+    {
+      "id": 37,
+      "category": "Расстройства функции тазовых органов (анонимно)",
+      "type": "select",
+      "question": "Продолжительность расстройств функции тазовых органов",
+      "required": false,
+      "isAnonymous": true,
+      "options": [
+        {"label": "≤ 5 лет", "points": 1},
+        {"label": "6-10 лет", "points": 2},
+        {"label": "≥ 10 лет", "points": 3},
+        {"label": "Не применимо", "points": 0}
+      ]
+    }
+  ]
+}
