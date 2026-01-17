@@ -25,7 +25,7 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
             padding: 40px;
         }
@@ -102,6 +102,7 @@
             margin-bottom: 0;
             cursor: pointer;
             font-weight: normal;
+            font-size: 14px;
         }
 
         .radio-group input[type="radio"],
@@ -222,23 +223,24 @@
             margin: 20px 0;
         }
 
-        .anonymous-section {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
+        .anonymous-notice {
+            background: #fff3e0;
             border-left: 4px solid #ff9800;
-            margin-top: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
         }
 
-        .anonymous-section h3 {
+        .anonymous-notice h3 {
             color: #ff9800;
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 13px;
+            margin-bottom: 8px;
         }
 
-        .anonymous-section p {
+        .anonymous-notice p {
             color: #666;
             font-size: 12px;
+            margin: 0;
         }
 
         .section-title {
@@ -257,13 +259,14 @@
             margin-bottom: 5px;
         }
 
-        .imt-inputs {
+        .composite-inputs {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
 
-        .imt-inputs input {
+        .composite-inputs input,
+        .composite-inputs select {
             width: 100%;
         }
 
@@ -308,7 +311,7 @@
                 width: 100%;
             }
 
-            .imt-inputs {
+            .composite-inputs {
                 grid-template-columns: 1fr;
             }
         }
@@ -419,6 +422,17 @@
             const form = document.getElementById('quizForm');
             form.innerHTML = '';
 
+            // Anonymous notice
+            if (question.isAnonymous) {
+                const notice = document.createElement('div');
+                notice.className = 'anonymous-notice';
+                notice.innerHTML = `
+                    <h3>⚠️ Конфиденциальный раздел</h3>
+                    <p>Ваши ответы на этот вопрос не будут сохранены с вашим ID и остаются полностью анонимными. Помните: пациентка не видит баллы во время заполнения, только итоговый результат.</p>
+                `;
+                form.appendChild(notice);
+            }
+
             // Update progress
             const progress = ((currentQuestion + 1) / quizData.questions.length) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
@@ -441,11 +455,6 @@
             // Update buttons
             document.getElementById('prevBtn').disabled = currentQuestion === 0;
             document.getElementById('nextBtn').textContent = currentQuestion === quizData.questions.length - 1 ? 'Завершить' : 'Далее →';
-
-            // Anonymous section notice
-            if (question.isAnonymous) {
-                form.innerHTML += '<div class="anonymous-section"><h3>⚠️ Анонимный раздел</h3><p>Ваши ответы на эти вопросы не будут сохранены в виде обычных данных и остаются полностью конфиденциальными.</p></div>';
-            }
         }
 
         function renderNumericQuestion(question, form) {
@@ -459,7 +468,7 @@
             form.appendChild(group);
 
             const input = form.querySelector(`#q${question.id}`);
-            if (answers[question.id] !== undefined) {
+            if (answers[question.id] !== undefined && answers[question.id] !== null) {
                 input.value = answers[question.id];
             }
         }
@@ -495,7 +504,7 @@
 
             question.options.forEach((option, index) => {
                 const label = document.createElement('label');
-                const isChecked = answers[question.id] && answers[question.id].includes(index);
+                const isChecked = answers[question.id] && Array.isArray(answers[question.id]) && answers[question.id].includes(index);
                 label.innerHTML = `
                     <input type="checkbox" data-question="${question.id}" data-index="${index}" ${isChecked ? 'checked' : ''}>
                     ${option.label}
@@ -512,21 +521,42 @@
             group.className = 'form-group';
             group.innerHTML = `<label>${question.question}</label>`;
 
-            const imtInputs = document.createElement('div');
-            imtInputs.className = 'imt-inputs';
+            const compositeInputs = document.createElement('div');
+            compositeInputs.className = 'composite-inputs';
 
             const currentAnswer = answers[question.id] || {};
 
             question.subfields.forEach(field => {
-                const input = document.createElement('input');
-                input.type = field.type;
-                input.placeholder = field.label;
-                input.id = `q${question.id}_${field.name}`;
-                input.value = currentAnswer[field.name] || '';
-                imtInputs.appendChild(input);
+                if (field.type === 'numeric') {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.placeholder = field.label;
+                    input.id = `q${question.id}_${field.name}`;
+                    input.value = currentAnswer[field.name] || '';
+                    compositeInputs.appendChild(input);
+                } else if (field.type === 'select') {
+                    const select = document.createElement('select');
+                    select.id = `q${question.id}_${field.name}`;
+                    select.innerHTML = '<option value="">-- Выберите --</option>';
+                    field.options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.textContent = opt.label;
+                        if (currentAnswer[field.name] === opt.value) option.selected = true;
+                        select.appendChild(option);
+                    });
+                    compositeInputs.appendChild(select);
+                } else if (field.type === 'text') {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = field.label;
+                    input.id = `q${question.id}_${field.name}`;
+                    input.value = currentAnswer[field.name] || '';
+                    compositeInputs.appendChild(input);
+                }
             });
 
-            group.appendChild(imtInputs);
+            group.appendChild(compositeInputs);
             form.appendChild(group);
         }
 
@@ -559,7 +589,7 @@
 
             if (question.type === 'numeric') {
                 const input = form.querySelector(`#q${question.id}`);
-                answers[question.id] = input ? parseInt(input.value) : null;
+                answers[question.id] = input ? (input.value !== '' ? parseInt(input.value) : null) : null;
             } else if (question.type === 'select') {
                 const selected = form.querySelector(`input[name="q${question.id}"]:checked`);
                 answers[question.id] = selected ? parseInt(selected.value) : null;
@@ -635,6 +665,7 @@
                         });
                     }
                 } else if (question.type === 'composite') {
+                    // Special handling for IMT (question 7)
                     if (question.id === 7 && answer.height && answer.weight) {
                         const height = parseInt(answer.height);
                         const weight = parseInt(answer.weight);
@@ -647,6 +678,10 @@
                             });
                             if (score) totalScore += score.points;
                         }
+                    }
+                    // Special handling for sexual dysfunction (question 36)
+                    if (question.id === 36 && answer.has_dysfunction === 'yes') {
+                        totalScore += 1;
                     }
                 }
             });
