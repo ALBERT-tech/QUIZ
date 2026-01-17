@@ -679,10 +679,6 @@
                             if (score) totalScore += score.points;
                         }
                     }
-                    // Special handling for sexual dysfunction (question 36)
-                    if (question.id === 36 && answer.has_dysfunction === 'yes') {
-                        totalScore += 1;
-                    }
                 }
             });
 
