@@ -148,12 +148,14 @@
     {
       "id": 10.5,
       "category": "Управляемые факторы риска",
-      "type": "composite",
-      "question": "Половая жизнь",
+      "type": "select",
+      "question": "Половая жизнь (сколько раз в неделю)",
       "required": false,
-      "subfields": [
-        {"name": "sexual_active", "label": "Активная половая жизнь?", "type": "select", "options": [{"label": "Да", "value": "yes"}, {"label": "Нет", "value": "no"}]},
-        {"name": "frequency", "label": "Как часто в неделю (дни)?", "type": "text"}
+      "options": [
+        {"label": "Редко (1 раз в неделю или реже)", "points": 0},
+        {"label": "Средне (2-3 раза в неделю)", "points": 1},
+        {"label": "Часто (4 и более раз в неделю)", "points": 2},
+        {"label": "Нет половой жизни", "points": 0}
       ]
     },
     {
@@ -451,17 +453,13 @@
     {
       "id": 36,
       "category": "Расстройства функции тазовых органов (АНОНИМНО)",
-      "type": "composite",
+      "type": "select",
       "question": "Расстройства половой функции (хлюпающие звуки при половом акте, боль при введении полового члена, дискомфорт, ощущение инородного тела, сухость, зуд)",
       "required": false,
       "isAnonymous": true,
-      "subfields": [
-        {"name": "has_dysfunction", "label": "Есть ли расстройства половой функции?", "type": "select", "options": [{"label": "Нет", "value": "no"}, {"label": "Да", "value": "yes"}]},
-        {"name": "severity", "label": "Оцените тяжесть (от 1 до 10)", "type": "numeric"}
-      ],
-      "scoring": [
-        {"points": 0},
-        {"points": 1}
+      "options": [
+        {"label": "Нет", "points": 0},
+        {"label": "Да", "points": 1}
       ]
     },
     {
